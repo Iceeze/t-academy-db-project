@@ -1,3 +1,98 @@
 @startuml
-' ER-диаграмма здесь
+entity "Клиенты" as customers {
+  * customer_id : INT
+  --
+  last_name : VARCHAR
+  first_name : VARCHAR
+  middle_name : VARCHAR
+  birth_date : DATE
+  * passport_data : VARCHAR
+  phone_number : VARCHAR
+  email : VARCHAR
+}
+
+entity "Типы_продуктов" as product_types {
+  * product_type_id : INT
+  --
+  * name : VARCHAR
+  description : TEXT
+}
+
+entity "Статусы_счетов" as account_statuses {
+  * status_id : INT
+  --
+  * name : VARCHAR
+  description : TEXT
+}
+
+entity "Валюты" as currencies {
+  * currency_id : INT
+  --
+  * code : VARCHAR
+  name : VARCHAR
+}
+
+entity "Счета" as accounts {
+  * account_id : INT
+  --
+  customer_id : INT
+  product_type_id : INT
+  status_id : INT
+  currency_id : INT
+  open_date : DATE
+  current_interest_rate : DECIMAL
+  created_at : DATE
+}
+
+entity "Типы_операций" as transaction_types {
+  * transaction_type_id : INT
+  --
+  * name : VARCHAR
+  description : TEXT
+}
+
+entity "Операции" as transactions {
+  * transaction_id : INT
+  --
+  account_id : INT
+  transaction_type_id : INT
+  amount : DECIMAL
+  transaction_date : TIMESTAMP
+  balance_after : DECIMAL
+  description : TEXT
+  created_at : TIMESTAMP
+}
+
+entity "История_ставок" as interest_rates {
+  * rate_id : INT
+  --
+  product_type_id : INT
+  interest_rate_value : DECIMAL
+  start_date : DATE
+  end_date : DATE
+}
+
+entity "Аудит_статусов" as status_audit {
+  * audit_id : INT
+  --
+  account_id : INT
+  old_status_id : INT
+  new_status_id : INT
+  change_date : TIMESTAMP
+}
+
+customers ||..o{ accounts : имеет
+product_types ||..o{ accounts : классифицирует
+account_statuses ||..o{ accounts : определяет
+currencies ||..o{ accounts : имеет
+
+accounts ||..o{ transactions : производит
+transaction_types ||..o{ transactions : определяет
+
+product_types ||..o{ interest_rates : имеет
+
+accounts ||..o{ status_audit : измененяет_статус
+account_statuses ||..o{ status_audit : из_статуса
+account_statuses ||..o{ status_audit : на_статус
+
 @enduml
