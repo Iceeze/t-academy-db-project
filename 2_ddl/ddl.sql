@@ -124,3 +124,17 @@ CREATE TABLE status_audit (
         REFERENCES account_statuses(status_id) ON DELETE RESTRICT
 );
 COMMENT ON TABLE status_audit IS 'Аудит изменений статусов счетов';
+
+-- Создание индексов для улучшения производительности
+CREATE INDEX idx_accounts_customer_id ON accounts(customer_id);
+CREATE INDEX idx_accounts_status_id ON accounts(status_id);
+CREATE INDEX idx_accounts_product_type ON accounts(product_type_id);
+CREATE INDEX idx_accounts_open_date ON accounts(open_date);
+
+CREATE INDEX idx_transactions_account_date ON transactions(account_id, transaction_date);
+CREATE INDEX idx_transactions_date ON transactions(transaction_date);
+CREATE INDEX idx_transactions_type ON transactions(transaction_type_id);
+
+CREATE INDEX idx_interest_rates_product_dates ON interest_rates(product_type_id, start_date);
+
+CREATE INDEX idx_status_audit_account_date ON status_audit(account_id, change_date);
